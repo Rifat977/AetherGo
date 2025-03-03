@@ -1,4 +1,3 @@
-```markdown
 # AetherGo
 
 AetherGo is a lightweight, modular web framework written in Go, designed for building fast and scalable web applications.
