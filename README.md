@@ -16,21 +16,12 @@ AetherGo is a lightweight, modular web framework written in Go, designed for bui
 ## Installation
 
 ```bash
-go get github.com/yourusername/AetherGo
+go get github.com/rifat977/AetherGo
 ```
 
 ## Quick Start
 
-1. Create a `.env` file in your project root:
-
-```env
-PORT=8080
-ENV=development
-TEMPLATES_DIR=cmd/templates
-STATIC_DIR=cmd/static
-```
-
-2. Create a basic server:
+1. Create a basic server:
 
 ```go
 package main
