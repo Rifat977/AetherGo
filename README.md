@@ -1,5 +1,3 @@
-I'll help you create a README.md file for your AetherGo project. Here's a comprehensive markdown content:
-
 ```markdown
 # AetherGo
 
