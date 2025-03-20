@@ -5,6 +5,7 @@ import (
 	"sync"
 
 	"AetherGo/internal/config"
+	"AetherGo/internal/db"
 	"AetherGo/internal/log"
 	"AetherGo/internal/middleware"
 	"AetherGo/internal/router"
@@ -18,10 +19,15 @@ type App struct {
 }
 
 func NewApp() *App {
-	return &App{
+
+	app := &App{
 		Config: config.NewConfig(),
 		Router: router.NewRouter(),
 	}
+
+	db.ConnectDB()
+
+	return app
 }
 
 func (a *App) Use(mw middleware.MiddlewareFunc) {
