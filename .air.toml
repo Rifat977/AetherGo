@@ -3,12 +3,14 @@ tmp_dir = "tmp"
 
 [build]
 # Modified build command to use full path
-cmd = "go build -o tmp/main cmd/main.go"
+cmd = "go build -o tmp/main nocash/main.go"
+
 bin = "tmp/main"
 include_ext = ["go", "html", "toml", "env"]
 exclude_dir = ["assets", "tmp", "vendor", "node_modules"]
 delay = 1000
 stop_on_error = true
+AIR_DEBUG=true
 
 [log]
 time = true
