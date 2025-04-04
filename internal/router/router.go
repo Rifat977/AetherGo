@@ -1,15 +1,3 @@
-// package router
-
-// import "net/http"
-
-// type Router struct {
-// 	routes map[string]http.HandlerFunc
-// }
-
-// func NewRouter() *Router {
-// 	return &Router{routes: make(map[string]http.HandlerFunc)}
-// }
-
 package router
 
 import (
@@ -21,8 +9,8 @@ import (
 )
 
 type route struct {
-	method string
-	pattern   string
+	method  string
+	pattern string
 	handler context.HandlerFunc
 }
 
@@ -46,18 +34,18 @@ func (r *Router) ServeHTTP(w http.ResponseWriter, req *http.Request) {
 
 		params, ok := match(route.pattern, req.URL.Path)
 		if ok {
-			ctx := &context.Context {
+			ctx := &context.Context{
 				Response: w,
-				Request: req,
-				Params: params,
+				Request:  req,
+				Params:   params,
 			}
 			route.handler(ctx)
-			log.Println("Route matched", route.method, route.pattern)
+			log.Infof("Route matched ", route.method, route.pattern)
 			return
 		}
 	}
 	http.NotFound(w, req)
-	log.Println("Route not found", req.Method, req.URL.Path)
+	log.Errorf("Route not found ", req.Method, req.URL.Path)
 }
 
 func match(pattern, path string) (map[string]string, bool) {

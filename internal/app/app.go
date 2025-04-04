@@ -22,13 +22,11 @@ type App struct {
 	mu          sync.RWMutex
 }
 
-func NewApp() *App {
-
+func NewApp(cfg *config.Config) *App {
 	app := &App{
-		Config: config.NewConfig(),
+		Config: cfg,
 		Router: router.NewRouter(),
 	}
-
 	db.ConnectDB()
 
 	return app
@@ -41,27 +39,20 @@ func (a *App) Use(mw middleware.MiddlewareFunc) {
 }
 
 func (a *App) Run() error {
+	port := a.Config.GetPort()
+
 	if a.Config.GetEnv() == "development" {
-		log.Printf("Starting development server on http://localhost%s", a.Config.GetPort())
-		return http.ListenAndServe(a.Config.GetPort(), a.Router)
+		log.Infof("Starting development server on http://localhost%s", port)
 	} else {
-		log.Printf("Starting production server on http://localhost%s", a.Config.GetPort())
-		return http.ListenAndServe(a.Config.GetPort(), a.Router)
+		log.Infof("Starting production server on http://localhost%s", port)
 	}
+
+	return http.ListenAndServe(port, a.Router)
 }
 
-// CreateNewProject initializes a new project with the required folder structure
 func CreateNewProject(projectName string) error {
-	// Define the project structure
 	dirs := []string{
 		projectName,
-		filepath.Join(projectName, "cmd"),
-		filepath.Join(projectName, "internal"),
-		filepath.Join(projectName, "internal/app"),
-		filepath.Join(projectName, "internal/db"),
-		filepath.Join(projectName, "internal/config"),
-		filepath.Join(projectName, "internal/log"),
-		filepath.Join(projectName, "internal/router"),
 		filepath.Join(projectName, "routes"),
 		filepath.Join(projectName, "handler"),
 		filepath.Join(projectName, "models"),
@@ -81,17 +72,74 @@ func CreateNewProject(projectName string) error {
 	mainFileContent := `package main
 
 import (
-	"AetherGo/internal/app"
+	"` + projectName + `/internal/app"
+	"` + projectName + `/routes"
 )
 
 func main() {
 	app := app.NewApp()
+	routes.RegisterRoutes(app)
 	app.Run()
 }`
 
 	err := os.WriteFile(mainFilePath, []byte(mainFileContent), 0644)
 	if err != nil {
 		return fmt.Errorf("failed to create main.go: %v", err)
+	}
+
+	// Create a sample `commonHandler.go` file
+	handlerFilePath := filepath.Join(projectName, "handler", "commonHandler.go")
+	handlerFileContent := `package handler
+
+import (
+	"` + projectName + `/internal/context"
+	"` + projectName + `/internal/render"
+)
+
+func IndexHandler(c *context.Context) {
+	if c.Request.Method == "GET" {
+		render.RenderTemplate(c.Response, "templates/index.html", nil)
+	}
+}`
+
+	err = os.WriteFile(handlerFilePath, []byte(handlerFileContent), 0644)
+	if err != nil {
+		return fmt.Errorf("failed to create handler/commonHandler.go: %v", err)
+	}
+
+	// Create a sample `User.go` model file
+	modelFilePath := filepath.Join(projectName, "models", "User.go")
+	modelFileContent := `package models
+
+import "gorm.io/gorm"
+
+type User struct {
+	gorm.Model
+	Name  string
+	Email string ` + "`gorm:\"unique\"`" + `
+}`
+
+	err = os.WriteFile(modelFilePath, []byte(modelFileContent), 0644)
+	if err != nil {
+		return fmt.Errorf("failed to create models/User.go: %v", err)
+	}
+
+	// Create a sample `routes.go` file
+	routesFilePath := filepath.Join(projectName, "routes", "routes.go")
+	routesFileContent := `package routes
+
+import (
+	"` + projectName + `/internal/app"
+	"` + projectName + `/handler"
+)
+
+func RegisterRoutes(application *app.App) {
+	application.Router.Add("GET", "/", handler.IndexHandler)
+}`
+
+	err = os.WriteFile(routesFilePath, []byte(routesFileContent), 0644)
+	if err != nil {
+		return fmt.Errorf("failed to create routes/routes.go: %v", err)
 	}
 
 	fmt.Printf("Project '%s' created successfully!\n", projectName)

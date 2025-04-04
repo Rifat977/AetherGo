@@ -3,7 +3,7 @@ tmp_dir = "tmp"
 
 [build]
 # Modified build command to use full path
-cmd = "go build -o tmp/main nocash/main.go"
+cmd = "go build -o tmp/main testapp/main.go"
 
 bin = "tmp/main"
 include_ext = ["go", "html", "toml", "env"]

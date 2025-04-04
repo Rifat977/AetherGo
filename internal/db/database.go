@@ -1,9 +1,10 @@
 package db
 
 import (
-	"fmt"
-	"log"
+	"AetherGo/internal/log"
 	"os"
+
+	// "path/filepath"
 
 	"gorm.io/driver/sqlite"
 	"gorm.io/gorm"
@@ -24,22 +25,22 @@ func ConnectDB() {
 		log.Fatalf("Failed to connect to database: %v", err)
 	}
 
-	fmt.Println("Database connection established")
-
+	log.Success("Database connection established")
 }
 
+// AutoMigrate runs the migration for all detected models.
 func AutoMigrate(models ...interface{}) {
 	for _, model := range models {
 		if !DB.Migrator().HasTable(model) {
-			log.Printf("Migrating table for model: %T", model)
+			log.Infof("Migrating table for model: %T", model)
 			err := DB.AutoMigrate(model)
 			if err != nil {
 				log.Fatalf("Failed to migrate model %T: %v", model, err)
 			} else {
-				log.Printf("Migration successful for model: %T", model)
+				log.Successf("Migration successful for model: %T", model)
 			}
 		} else {
-			log.Printf("Model %T already migrated, skipping.", model)
+			log.Infof("Model %T already migrated, skipping.", model)
 		}
 	}
 }
