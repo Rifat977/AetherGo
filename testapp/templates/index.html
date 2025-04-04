@@ -1,0 +1,420 @@
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AetherGo - Lightweight Go Web Framework</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: {
+                        sans: ['Space Grotesk', 'sans-serif'],
+                    },
+                    colors: {
+                        aether: {
+                            primary: '#6366f1',  // Keeping the purple primary
+                            dark: '#0f172a',     // Deep space blue-black
+                            light: '#f8fafc',    // Bright white
+                            accent: '#8b5cf6',   // Electric purple (replaces light blue)
+                            neon: '#00f5d4',     // Futuristic teal
+                            glow: '#a78bfa'      // Soft purple glow
+                        }
+                    },
+                    animation: {
+                        'float': 'float 6s ease-in-out infinite',
+                        'gradient': 'gradient 8s ease infinite',
+                        'pulse-glow': 'pulse-glow 4s cubic-bezier(0.4, 0, 0.6, 1) infinite'
+                    },
+                    keyframes: {
+                        float: {
+                            '0%, 100%': { transform: 'translateY(0)' },
+                            '50%': { transform: 'translateY(-10px)' },
+                        },
+                        gradient: {
+                            '0%, 100%': { 'background-position': '0% 50%' },
+                            '50%': { 'background-position': '100% 50%' },
+                        },
+                        'pulse-glow': {
+                            '0%, 100%': { 
+                                'text-shadow': '0 0 5px rgba(139, 92, 246, 0)',
+                                'opacity': '1'
+                            },
+                            '50%': { 
+                                'text-shadow': '0 0 20px rgba(139, 92, 246, 0.7)',
+                                'opacity': '0.8'
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        .gradient-bg {
+            background: linear-gradient(-45deg, #0f172a, #1e293b, #334155, #475569);
+            background-size: 400% 400%;
+        }
+        .code-block {
+            background: rgba(15, 23, 42, 0.7);
+            backdrop-filter: blur(10px);
+        }
+    </style>
+    <style>
+        @keyframes gradient-border {
+            0% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
+        }
+        @keyframes text-gradient {
+            0% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
+        }
+        .animate-gradient-border {
+            background-size: 200% 200%;
+            animation: gradient-border 6s ease infinite;
+        }
+        .animate-text-gradient {
+            background-size: 200% 200%;
+            animation: text-gradient 8s ease infinite;
+        }
+        .drop-shadow-glow {
+            filter: drop-shadow(0 0 8px rgba(139, 92, 246, 0.3));
+        }
+        .animate-gradient-mesh {
+            background-size: 400% 400%;
+            animation: gradient 12s ease infinite;
+        }
+    </style>
+</head>
+<body class="bg-aether-dark text-aether-light font-sans antialiased">
+    <!-- Animated Background -->
+<div class="fixed inset-0 -z-10 overflow-hidden">
+    <div class="absolute inset-0 bg-[radial-gradient(ellipse_at_center,_var(--tw-gradient-stops))] from-aether-dark/80 via-aether-dark to-aether-dark/90"></div>
+    <div class="absolute inset-0 opacity-20">
+        <div class="absolute inset-0 bg-[url('data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iNjAiIGhlaWdodD0iNjAiIHZpZXdCb3g9IjAgMCA2MCA2MCIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj48ZyBmaWxsPSJub25lIiBmaWxsLXJ1bGU9ImV2ZW5vZGQiPjxnIGZpbGw9IiNmZmYiIGZpbGwtb3BhY2l0eT0iMC4wNSI+PHBhdGggZD0iTTM2IDM0aC0yMXYtMjBoLTJ2MjJoMjJ2LTJ6TTIyIDM2aDIwdjJoLTIydi0yem0wLTI0aDJ2MjBoLTJ2LTIwem0yMCAwaDJ2MjBoLTJ2LTIweiIvPjwvZz48L2c+PC9zdmc+')]"></div>
+    </div>
+    <div class="absolute inset-0 bg-gradient-to-br from-aether-primary/5 via-aether-accent/5 to-aether-neon/5 animate-gradient-mesh opacity-50"></div>
+</div>
+
+<!-- Hero Section -->
+<section class="min-h-screen flex items-center justify-center px-4 sm:px-6 lg:px-8 relative overflow-hidden">
+    <!-- Floating particles -->
+    <div class="absolute inset-0 overflow-hidden pointer-events-none">
+        <div class="absolute top-1/4 left-1/4 w-2 h-2 rounded-full bg-aether-neon animate-float opacity-80" style="animation-delay: 0s"></div>
+        <div class="absolute top-1/3 right-1/5 w-3 h-3 rounded-full bg-aether-accent animate-float opacity-60" style="animation-delay: 1.5s"></div>
+        <div class="absolute bottom-1/4 left-1/3 w-4 h-4 rounded-full bg-aether-primary animate-float opacity-70" style="animation-delay: 2.5s"></div>
+    </div>
+
+    <div class="max-w-7xl mx-auto text-center relative z-10">
+        <!-- Animated logo with gradient border -->
+        <div class="inline-flex items-center justify-center mb-8 p-1 rounded-full bg-gradient-to-r from-aether-primary via-aether-accent to-aether-neon animate-gradient-border">
+            <div class="bg-aether-dark p-4 rounded-full">
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-16 w-16 text-aether-accent animate-pulse-glow" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M13 10V3L4 14h7v7l9-11h-7z" />
+                </svg>
+            </div>
+        </div>
+
+        <!-- Main heading with advanced gradient -->
+        <h1 class="text-5xl sm:text-6xl md:text-7xl font-bold mb-6">
+            <span class="bg-clip-text text-transparent bg-[linear-gradient(45deg,_var(--tw-gradient-stops))] from-aether-primary via-aether-accent to-aether-neon animate-text-gradient">
+                AetherGo
+            </span>
+        </h1>
+
+        <!-- Subheading with subtle glow -->
+        <p class="text-xl md:text-2xl max-w-3xl mx-auto mb-10 text-aether-light/90 drop-shadow-glow">
+            The next-generation Go framework for <span class="text-aether-neon font-medium">high-performance</span>, <span class="text-aether-accent font-medium">scalable</span> web applications
+        </p>
+
+        <!-- CTA buttons with futuristic effects -->
+        <div class="flex flex-col sm:flex-row gap-4 justify-center">
+            <a href="#features" class="relative px-8 py-3.5 bg-aether-primary hover:bg-aether-glow rounded-lg font-medium transition-all duration-300 group overflow-hidden">
+                <span class="relative z-10">Explore Features</span>
+                <span class="absolute inset-0 bg-gradient-to-r from-aether-primary to-aether-accent opacity-0 group-hover:opacity-100 transition-opacity duration-500"></span>
+                <span class="absolute inset-0 border border-aether-primary/50 group-hover:border-aether-accent/80 transition-all duration-500 rounded-lg"></span>
+            </a>
+            
+            <a href="#get-started" class="relative px-8 py-3.5 border border-aether-primary/80 hover:border-aether-accent text-aether-primary hover:text-aether-light rounded-lg font-medium transition-all duration-300 group">
+                <span class="relative z-10">Get Started</span>
+                <span class="absolute inset-0 bg-aether-primary/5 group-hover:bg-aether-primary/10 transition-all duration-500 rounded-lg"></span>
+                <span class="absolute bottom-0 left-0 right-0 h-0.5 bg-aether-accent scale-x-0 group-hover:scale-x-100 transition-transform duration-500 origin-left"></span>
+            </a>
+        </div>
+    </div>
+</section>
+
+
+    <!-- Features Section -->
+    <section id="features" class="py-20 px-4 sm:px-6 lg:px-8">
+        <div class="max-w-7xl mx-auto">
+            <h2 class="text-3xl md:text-4xl font-bold text-center mb-16">
+                <span class="border-b-2 border-aether-primary pb-2">Why AetherGo?</span>
+            </h2>
+            
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+                <!-- Feature 1 -->
+                <div class="code-block p-8 rounded-xl border border-gray-800 hover:border-aether-primary/50 transition-all duration-300">
+                    <div class="text-aether-accent mb-4">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-10 w-10" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z" />
+                        </svg>
+                    </div>
+                    <h3 class="text-xl font-bold mb-3">High Performance</h3>
+                    <p class="text-gray-300">
+                        Written in Go, compiled for low-latency and high throughput applications that scale effortlessly.
+                    </p>
+                </div>
+                
+                <!-- Feature 2 -->
+                <div class="code-block p-8 rounded-xl border border-gray-800 hover:border-aether-primary/50 transition-all duration-300">
+                    <div class="text-aether-accent mb-4">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-10 w-10" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 5a1 1 0 011-1h14a1 1 0 011 1v2a1 1 0 01-1 1H5a1 1 0 01-1-1V5zM4 13a1 1 0 011-1h6a1 1 0 011 1v6a1 1 0 01-1 1H5a1 1 0 01-1-1v-6zM16 13a1 1 0 011-1h2a1 1 0 011 1v6a1 1 0 01-1 1h-2a1 1 0 01-1-1v-6z" />
+                        </svg>
+                    </div>
+                    <h3 class="text-xl font-bold mb-3">Modular Architecture</h3>
+                    <p class="text-gray-300">
+                        Clean separation of concerns with models, routes, and handlers that are easy to extend and maintain.
+                    </p>
+                </div>
+                
+                <!-- Feature 3 -->
+                <div class="code-block p-8 rounded-xl border border-gray-800 hover:border-aether-primary/50 transition-all duration-300">
+                    <div class="text-aether-accent mb-4">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-10 w-10" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 20l4-16m4 4l4 4-4 4M6 16l-4-4 4-4" />
+                        </svg>
+                    </div>
+                    <h3 class="text-xl font-bold mb-3">Built-in ORM</h3>
+                    <p class="text-gray-300">
+                        GORM integration simplifies database interactions with support for migrations, relationships, and hooks.
+                    </p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Replace the "Simple & Elegant" section with this: -->
+<section class="py-20 px-4 sm:px-6 lg:px-8 bg-gradient-to-b from-aether-dark/50 to-aether-dark">
+    <div class="max-w-7xl mx-auto">
+        <h2 class="text-3xl md:text-4xl font-bold text-center mb-16">
+            <span class="border-b-2 border-aether-primary pb-2">Advanced Capabilities</span>
+        </h2>
+        
+        <div class="grid grid-cols-1 lg:grid-cols-2 gap-8 items-center">
+            <div>
+                <h3 class="text-2xl font-bold mb-4">Enterprise-Grade Features</h3>
+                <p class="text-gray-300 mb-6">
+                    AetherGo combines simplicity with powerful features needed for modern web applications.
+                </p>
+                <div class="space-y-4">
+                    <div class="flex items-start">
+                        <div class="flex-shrink-0 mt-1 mr-3 text-aether-accent">
+                            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
+                                <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd" />
+                            </svg>
+                        </div>
+                        <div>
+                            <p class="font-medium">Performance Optimized Core</p>
+                            <p class="text-gray-400 text-sm">Lightweight architecture with intelligent routing and zero unnecessary dependencies</p>
+                        </div>
+                    </div>
+                    <div class="flex items-start">
+                        <div class="flex-shrink-0 mt-1 mr-3 text-aether-accent">
+                            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
+                                <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd" />
+                            </svg>
+                        </div>
+                        <div>
+                            <p class="font-medium">Advanced Development Tools</p>
+                            <p class="text-gray-400 text-sm">Hot reloading, debug mode, and built-in profiling for rapid iteration</p>
+                        </div>
+                    </div>
+                    <div class="flex items-start">
+                        <div class="flex-shrink-0 mt-1 mr-3 text-aether-accent">
+                            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
+                                <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd" />
+                            </svg>
+                        </div>
+                        <div>
+                            <p class="font-medium">Production Ready</p>
+                            <p class="text-gray-400 text-sm">Built-in logging, error handling, and health checks for reliable deployments</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="code-block p-6 rounded-lg border border-gray-800 overflow-x-auto">
+                <pre class="text-sm text-gray-300"><code class="language-go">
+package main
+
+import (
+    "AetherGo"
+    "AetherGo/testapp/models"
+    "AetherGo/testapp/routes"
+    "log"
+)
+
+func main() {
+    app := AetherGo.Bootstrap("testapp", 
+        models.GetAll(), 
+        routes.RegisterRoutes
+    )
+    AetherGo.Run(app)
+    log.Println("🌟 Application started!")
+}                    
+</code></pre>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Add this new "Future Features" section before the "Get Started" section -->
+<section class="py-20 px-4 sm:px-6 lg:px-8">
+    <div class="max-w-7xl mx-auto">
+        <h2 class="text-3xl md:text-4xl font-bold text-center mb-4">
+            Coming Soon
+        </h2>
+        <p class="text-center text-xl text-gray-300 mb-12 max-w-3xl mx-auto">
+            We're constantly evolving. Here's what's next for AetherGo:
+        </p>
+        
+        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+            <!-- Feature 1 -->
+            <div class="code-block p-6 rounded-xl border border-gray-800 hover:border-aether-primary/50 transition-all duration-300">
+                <div class="flex items-center mb-3">
+                    <div class="mr-4 text-aether-accent">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 11c0 3.517-1.009 6.799-2.753 9.571m-3.44-2.04l.054-.09A13.916 13.916 0 008 11a4 4 0 118 0c0 1.017-.07 2.019-.203 3m-2.118 6.844A21.88 21.88 0 0015.171 17m3.839 1.132c.645-2.266.99-4.659.99-7.132A8 8 0 008 4.07M3 15.364c.64-1.319 1-2.8 1-4.364 0-1.457.39-2.823 1.07-4" />
+                        </svg>
+                    </div>
+                    <h3 class="text-lg font-bold">JWT Authentication</h3>
+                </div>
+                <p class="text-gray-400 text-sm">
+                    Secure user authentication with JSON Web Tokens and role-based access control
+                </p>
+            </div>
+            
+            <!-- Feature 2 -->
+            <div class="code-block p-6 rounded-xl border border-gray-800 hover:border-aether-primary/50 transition-all duration-300">
+                <div class="flex items-center mb-3">
+                    <div class="mr-4 text-aether-accent">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 10h.01M12 10h.01M16 10h.01M9 16H5a2 2 0 01-2-2V6a2 2 0 012-2h14a2 2 0 012 2v8a2 2 0 01-2 2h-5l-5 5v-5z" />
+                        </svg>
+                    </div>
+                    <h3 class="text-lg font-bold">WebSockets Support</h3>
+                </div>
+                <p class="text-gray-400 text-sm">
+                    Real-time bidirectional communication for chat, notifications, and live updates
+                </p>
+            </div>
+            
+            <!-- Feature 3 -->
+            <div class="code-block p-6 rounded-xl border border-gray-800 hover:border-aether-primary/50 transition-all duration-300">
+                <div class="flex items-center mb-3">
+                    <div class="mr-4 text-aether-accent">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-6 9l2 2 4-4" />
+                        </svg>
+                    </div>
+                    <h3 class="text-lg font-bold">Task Scheduling</h3>
+                </div>
+                <p class="text-gray-400 text-sm">
+                    Background job processing with cron-like scheduling for better performance
+                </p>
+            </div>
+            
+            <!-- Feature 4 -->
+            <div class="code-block p-6 rounded-xl border border-gray-800 hover:border-aether-primary/50 transition-all duration-300">
+                <div class="flex items-center mb-3">
+                    <div class="mr-4 text-aether-accent">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 3v2m6-2v2M9 19v2m6-2v2M5 9H3m2 6H3m18-6h-2m2 6h-2M7 19h10a2 2 0 002-2V7a2 2 0 00-2-2H7a2 2 0 00-2 2v10a2 2 0 002 2zM9 9h6v6H9V9z" />
+                        </svg>
+                    </div>
+                    <h3 class="text-lg font-bold">GraphQL Support</h3>
+                </div>
+                <p class="text-gray-400 text-sm">
+                    Flexible API alternative to REST with automatic query optimization
+                </p>
+            </div>
+            
+            <!-- Feature 5 -->
+            <div class="code-block p-6 rounded-xl border border-gray-800 hover:border-aether-primary/50 transition-all duration-300">
+                <div class="flex items-center mb-3">
+                    <div class="mr-4 text-aether-accent">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z" />
+                        </svg>
+                    </div>
+                    <h3 class="text-lg font-bold">Rate Limiting</h3>
+                </div>
+                <p class="text-gray-400 text-sm">
+                    Protect your API endpoints from abuse and DDoS attacks
+                </p>
+            </div>
+            
+            <!-- Feature 6 -->
+            <div class="code-block p-6 rounded-xl border border-gray-800 hover:border-aether-primary/50 transition-all duration-300">
+                <div class="flex items-center mb-3">
+                    <div class="mr-4 text-aether-accent">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 9l3 3-3 3m5 0h3M5 20h14a2 2 0 002-2V6a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
+                        </svg>
+                    </div>
+                    <h3 class="text-lg font-bold">CLI Tools</h3>
+                </div>
+                <p class="text-gray-400 text-sm">
+                    Powerful command-line utilities for scaffolding and managing your application
+                </p>
+            </div>
+        </div>
+    </div>
+</section>
+
+    <!-- Get Started Section -->
+    <section id="get-started" class="py-20 px-4 sm:px-6 lg:px-8">
+        <div class="max-w-4xl mx-auto text-center">
+            <h2 class="text-3xl md:text-4xl font-bold mb-8">
+                Ready to Build Something Amazing?
+            </h2>
+            <p class="text-xl text-gray-300 mb-10">
+                Get started with AetherGo today and experience the simplicity of Go web development.
+            </p>
+            <div class="flex flex-col sm:flex-row gap-4 justify-center">
+                <a href="#" class="px-8 py-4 bg-aether-primary hover:bg-indigo-500 rounded-lg font-medium transition-all duration-300 transform hover:scale-105">
+                    Documentation
+                </a>
+                <a href="#" class="px-8 py-4 border border-aether-primary text-aether-primary hover:bg-aether-primary/10 rounded-lg font-medium transition-all duration-300">
+                    GitHub Repository
+                </a>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="py-10 border-t border-gray-800">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center text-gray-400">
+            <p>© 2023 AetherGo Framework. All rights reserved.</p>
+        </div>
+    </footer>
+
+    <script>
+        // Smooth scrolling for anchor links
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function (e) {
+                e.preventDefault();
+                document.querySelector(this.getAttribute('href')).scrollIntoView({
+                    behavior: 'smooth'
+                });
+            });
+        });
+    </script>
+</body>
+</html>
