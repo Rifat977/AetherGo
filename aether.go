@@ -4,6 +4,7 @@ import (
 	"AetherGo/internal/app"
 	"AetherGo/internal/config"
 	"AetherGo/internal/db"
+	"AetherGo/internal/log"
 )
 
 type App = app.App
@@ -11,6 +12,10 @@ type App = app.App
 func Bootstrap(appName string, models []interface{}, routeRegistrar func(*App), overrides ...config.Config) *App {
 	cfg := configure(overrides...)
 	app := app.NewApp(cfg)
+
+	db.ConnectDB(appName)
+
+	log.Infof("AetherGo version 1.0, using environment '%s'", appName)
 
 	routeRegistrar(app)
 

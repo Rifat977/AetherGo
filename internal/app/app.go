@@ -5,7 +5,6 @@ import (
 	"sync"
 
 	"AetherGo/internal/config"
-	"AetherGo/internal/db"
 	"AetherGo/internal/log"
 	"AetherGo/internal/middleware"
 	"AetherGo/internal/router"
@@ -27,8 +26,6 @@ func NewApp(cfg *config.Config) *App {
 		Config: cfg,
 		Router: router.NewRouter(),
 	}
-	db.ConnectDB()
-
 	return app
 }
 
@@ -42,10 +39,12 @@ func (a *App) Run() error {
 	port := a.Config.GetPort()
 
 	if a.Config.GetEnv() == "development" {
-		log.Infof("Starting development server on http://localhost%s", port)
+		log.Infof("Starting development server at http://127.0.0.1%s", port)
 	} else {
-		log.Infof("Starting production server on http://localhost%s", port)
+		log.Infof("Starting production server at http://127.0.0.1%s", port)
 	}
+
+	log.Infof("Quit the server with CONTROL-C.\n\n")
 
 	return http.ListenAndServe(port, a.Router)
 }
