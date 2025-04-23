@@ -1,8 +1,8 @@
 package context
 
 import (
-	"encoding/json"
 	"net/http"
+	"encoding/json"
 )
 
 type Context struct {
@@ -13,6 +13,7 @@ type Context struct {
 
 type HandlerFunc func(*Context)
 
+// show all logs
 func (c *Context) JSON(status int, data interface{}) error {
 	c.Response.Header().Set("Content-Type", "application/json")
 	c.Response.WriteHeader(status)
